@@ -6,7 +6,7 @@ Project: webshare-proxies-file-converter
 Created Date: 13.03.2023 22:18:12
 Author: 3urobeat
 
-Last Modified: 13.03.2023 23:04:27
+Last Modified: 13.03.2023 23:28:22
 Modified By: 3urobeat
 
 Copyright (c) 2023 3urobeat <https://github.com/HerrEurobeat>
@@ -49,16 +49,31 @@ inputFile = open("input.txt", "r") # Open input.txt with read perms
 print("Creating empty proxies.txt file...")
 
 outputFile = open("proxies.txt", "w") # Create and open output file
-
 outputFile.write("") # Clear any content
+outputFile.close()
+
+outputFile = open("proxies.txt", "a") # Reopen file in append mode
 
 
 # Convert and append to new file
 print("Converting and appending to new file...")
 
-# Write to a new file
-print("Creating and writing to a new file...")
+for line in inputFile: # Iterate over all lines in the input file
+    if len(line) < 5:  # Skip any lines that are too short to be valid
+        continue
+
+    # Remove newline char from end of the line
+    line = line.replace("\n", "")
+
+    # Split by colon
+    parts = line.split(":")
+
+    # Construct new line with syntax "http://username:password@ip:port" and append it to outputFile
+    outputFile.write(f"http://{parts[2]}:{parts[3]}@{parts[0]}:{parts[1]}\n")
 
 
 # End
+inputFile.close()
+outputFile.close()
+
 print("Done! Exiting...")
